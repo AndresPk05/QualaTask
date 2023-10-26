@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { Update } from "../Actions/SucursalAction";
 import { Get } from "../Actions/MonedaAction";
+import SnackBar from "./SnackBar";
 
 const PopupForm = ({ open, onClose, object, onEdit }) => {
   const [formData, setFormData] = useState({
@@ -25,6 +26,8 @@ const PopupForm = ({ open, onClose, object, onEdit }) => {
   });
 
   const [monedas, setMonedas] = useState([]);
+  const [openSnackBar, setOpenSnackBar] = useState(false);
+  const [messageSnackBar, setMessageSnackBar] = useState("");
 
   React.useEffect(() => {
     setFormData(object);
@@ -65,7 +68,13 @@ const PopupForm = ({ open, onClose, object, onEdit }) => {
 
     Update(formData)
       .then((result) => {
-        console.log(result);
+        if(result.error){
+          setMessageSnackBar(result.message)
+          setOpenSnackBar(true)
+        }
+        setMessageSnackBar("Sucursal editada correctamente")
+        setOpenSnackBar(true)
+
         setFormData({});
         onEdit();
         onClose();
@@ -209,6 +218,9 @@ const PopupForm = ({ open, onClose, object, onEdit }) => {
           </Button>
         </DialogActions>
       </Dialog>
+      {
+        openSnackBar ? <SnackBar open={openSnackBar} onClose={() => setOpenSnackBar(false)} message={messageSnackBar} /> : null
+      }
     </>
   );
 };

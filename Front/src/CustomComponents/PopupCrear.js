@@ -17,6 +17,7 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from 'dayjs';
+import SnackBar from "./SnackBar";
 
 const PopupFormCreate = ({ open, onClose }) => {
   const [formData, setFormData] = useState({
@@ -35,8 +36,9 @@ const PopupFormCreate = ({ open, onClose }) => {
       )),
   });
   const [validarForm, setValidarForm] = useState(false);
-
   const [monedas, setMonedas] = useState([]);
+  const [openSnackBar, setOpenSnackBar] = useState(false);
+  const [messageSnackBar, setMessageSnackBar] = useState("");
 
   React.useEffect(() => {
     handleGetMonedas();
@@ -83,6 +85,12 @@ const PopupFormCreate = ({ open, onClose }) => {
 
     Create(formData)
       .then((result) => {
+        if(result.error){
+          setMessageSnackBar(result.message)
+          setOpenSnackBar(true)
+        }
+        setMessageSnackBar("Sucursal creada correctamente")
+        setOpenSnackBar(true)
         setFormData({});
         handleClose();
       })
@@ -266,6 +274,9 @@ const PopupFormCreate = ({ open, onClose }) => {
           </Button>
         </DialogActions>
       </Dialog>
+      {
+        openSnackBar ? <SnackBar open={openSnackBar} onClose={() => setOpenSnackBar(false)} message={messageSnackBar} /> : null
+      }
     </>
   );
 };

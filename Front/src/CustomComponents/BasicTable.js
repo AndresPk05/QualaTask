@@ -46,6 +46,11 @@ export default function BasicTable(props) {
   const fetchData = async () => {
     Get({ codigoSucursal: props.codigoSucursal, page, rowsPerPage })
       .then((result) => {
+        if(result.result.length === 0)
+        {
+          setMessageSnackBar("No hay datos para mostrar")
+          setOpenSnackBar(true)
+        }
         setData(result.result);
         setCount(result.count);
       })
@@ -90,7 +95,6 @@ export default function BasicTable(props) {
 
   return (
     <>
-      <ToastContainer position="bottom-center" autoClose={5000} />
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
