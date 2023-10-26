@@ -80,11 +80,9 @@ const PopupFormCreate = ({ open, onClose }) => {
     }
 
     formData.fechaCreacion = formData.fechaCreacion.format("YYYY-MM-DD");
-    console.log(formData);
 
     Create(formData)
       .then((result) => {
-        console.log(result);
         setFormData({});
         handleClose();
       })
@@ -148,7 +146,6 @@ const PopupFormCreate = ({ open, onClose }) => {
           day: "numeric",
         }
       ));
-        debugger;
     if (formData.fechaCreacion < currentDay) {
         return false;
     }

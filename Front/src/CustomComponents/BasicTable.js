@@ -12,7 +12,7 @@ import { Delete, Get } from "../Actions/SucursalAction";
 import { ToastContainer, toast } from "react-toastify";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-
+import SnackBar from "./SnackBar";
 
 export default function BasicTable(props) {
   const [data, setData] = useState([]);
@@ -20,6 +20,8 @@ export default function BasicTable(props) {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [count, setCount] = useState(0);
   const [open, setOpen] = useState(false);
+  const [openSnackBar, setOpenSnackBar] = useState(false);
+  const [messageSnackBar, setMessageSnackBar] = useState("");
   const [object, setObject] = useState({
     codigo: "",
     descripcion: "",
@@ -63,11 +65,19 @@ export default function BasicTable(props) {
   const deleteRow = async (id) => {
     Delete(id)
       .then((result) => {
-        console.log(result);
+        if(result.error)
+        {
+          setMessageSnackBar(result.message)
+          setOpenSnackBar(true)
+        }
+
+        setMessageSnackBar("Fila Eliminada")
+        setOpenSnackBar(true)
         fetchData();
       })
       .catch((error) => {
-        console.log(error);
+        setMessageSnackBar("No se pudo eliminar la fila")
+        setOpenSnackBar(true)
       });
   };
 
@@ -162,6 +172,9 @@ export default function BasicTable(props) {
         object={object}
         onEdit={handleChangeRowEditDelete}
       />
+      {
+        openSnackBar ? <SnackBar open={openSnackBar} onClose={() => setOpenSnackBar(false)} message={messageSnackBar} /> : null
+      }
     </>
   );
 }
